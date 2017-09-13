@@ -73,11 +73,11 @@ def insert(name, color, size, shape, quantity):
 	#adding record
 	#c.execute("INSERT INTO {tn} ({cn}, {cn}, {cn}, {cn}, {cn}, {cn}) VALUES (id, name, color, size, shape, quantity)".\
 	#format(tn=table_name, cn='id_column', cn='name_column', cn='color_column', cn='size_column', cn='shape_column', cn='quantity_column'))
-	
+
+	#take six supplied values and make new entry
 	c.execute("INSERT INTO widgets VALUES (?, ?, ?, ?, ?, ?);", (id, name, color, size, shape, quantity))
-	#c.execute("INSERT INTO widgets VALUES ("+str(id)+", "+name+", 'orange', 'medium', 'sphere', 4)")
 	
-	
+	#commit the addition
 	conn.commit()
 	conn.close()
 
@@ -157,17 +157,17 @@ def values_in_col(cursor, table_name, print_out=True):
     return col_dict
 
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
 
-    #sqlite_file = 'my_first_db.sqlite'
-    #table_name = 'widgets'
+    sqlite_file = 'my_first_db.sqlite'
+    table_name = 'widgets'
 
-    #conn, c = connect(sqlite_file)
-    #total_rows(c, table_name, print_out=True)
-    #table_col_info(c, table_name, print_out=True)
-    #values_in_col(c, table_name, print_out=True) # slow on large data bases
+    conn, c = connect(sqlite_file)
+    total_rows(c, table_name, print_out=True)
+    table_col_info(c, table_name, print_out=True)
+    values_in_col(c, table_name, print_out=True) # slow on large data bases
     
-    #close(conn)
+    close(conn)
 
 	
 	
@@ -186,6 +186,73 @@ def add():
 	quantity=input("Enter quantity of widget: ")
 	insert(name, color, size, shape, quantity)
 	
+	
+def delete():
+	name=input("Enter name of widget to delete: ")
+	sqlite_file = 'my_first_db.sqlite'
+	table_name = 'widgets'
+		
+	# Connecting to the database file
+	conn = sqlite3.connect(sqlite_file)
+	c = conn.cursor()
+
+	c.execute("DELETE FROM widgets WHERE Name=?", (name,))
+	print("Record with name "+name+" has been deleted.")
+	
+	#commit the addition
+	conn.commit()
+	
+def update():
+	thisLoop=True
+	canContinue=False
+	f=""
+	while(thisLoop==True):
+		name=input("Enter name of widget to update: ")
+		print("Type the name of this widget's field you wish to update or exit to abort: ")
+		print("name")
+		print("color")
+		print("size")
+		print("shape")
+		print("quantity")
+		f=input("Enter your selection: ")
+		if f=="color" or f=="name" or f=="size" or f=="shape" or f=="quantity":
+			new_value=input("Enter new value for this field: ")
+			canContinue=True
+			break
+		elif f=="exit":
+			break
+		else:
+			print("Invallid selection.")
+	
+	if canContinue == True:
+		sqlite_file = 'my_first_db.sqlite'
+		table_name = 'widgets'
+		
+		# Connecting to the database file
+		conn = sqlite3.connect(sqlite_file)
+		c = conn.cursor()
+
+		if f=="color":
+			c.execute("UPDATE widgets SET color = ? WHERE name = ?", (new_value, name))
+		elif f=="name":
+			c.execute("UPDATE widgets SET name = ? WHERE name = ?", (new_value, name))
+		elif f=="size":
+			c.execute("UPDATE widgets SET size = ? WHERE name = ?", (new_value, name))
+		elif f=="shape":
+			c.execute("UPDATE widgets SET shape = ? WHERE name = ?", (new_value, name))
+			print("F = "+f)
+		else:
+			c.execute("UPDATE widgets SET quantity = ? WHERE name = ?", (new_value, name))
+	
+	
+	
+	
+	#commit the addition
+	conn.commit()
+	
+
+	
+	
 loop=True
 opt=0
 while(loop==True):	
@@ -193,6 +260,8 @@ while(loop==True):
 	print("create")
 	print("add")
 	print("show")
+	print("delete")
+	print("update")
 	print("exit")
 	opt=input("Type a command: ")
 	if opt == "exit":
@@ -202,9 +271,14 @@ while(loop==True):
 		create_database()
 	elif opt == "add":
 		add()
+	elif opt == "delete":
+		delete()
 	elif opt == "show":
 		show_entries()
-		
+	elif opt == "update":
+		update()
+	else:
+		print("Command not recognized.")
 	
 	
 	
