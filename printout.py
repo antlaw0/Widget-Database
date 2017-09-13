@@ -1,6 +1,89 @@
-import Row
+import sqlite3
 
-Row.insert('first widget', 'orange', 'medium', 'sphere', 4)
+def create_database():
+	sqlite_file = 'my_first_db.sqlite'    # name of the sqlite database file
+	table_name = 'widgets'	# name of the table to be created
+	id_column='id_column'
+
+	# Connecting to the database file
+	conn = sqlite3.connect(sqlite_file)
+	c = conn.cursor()
+
+	# Creating a new SQLite table 
+	c.execute('CREATE TABLE {tn} ({nf} {ft})'\
+			.format(tn=table_name, nf=id_column, ft='INTEGER'))
+
+	#add next column
+	new_column='name'
+	column_type='TEXT'
+	c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}"\
+			.format(tn=table_name, cn=new_column, ct=column_type))
+
+	#add next column
+	new_column='color'
+	column_type='TEXT'
+	c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}"\
+			.format(tn=table_name, cn=new_column, ct=column_type))
+
+	#add next column
+	new_column='size'
+	column_type='TEXT'
+	c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}"\
+			.format(tn=table_name, cn=new_column, ct=column_type))
+
+	#add next column
+	new_column='shape'
+	column_type='TEXT'
+	c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}"\
+			.format(tn=table_name, cn=new_column, ct=column_type))
+
+		
+	#add next column
+	new_column='quantity'
+	column_type='INTEGER'
+	c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}"\
+			.format(tn=table_name, cn=new_column, ct=column_type))
+
+		
+		
+	print("Database and table created")
+
+	# Committing changes and closing the connection to the database file
+	conn.commit()
+	conn.close()
+
+
+id_index=1
+def insert(name, color, size, shape, quantity):
+	global id_index
+	sqlite_file = 'my_first_db.sqlite'
+	table_name = 'widgets'
+	id = id_index
+	id_index+=1 #advance id counter
+	name=name
+	color=color
+	size=size
+	shape=shape
+	quantity=quantity
+		
+	# Connecting to the database file
+	conn = sqlite3.connect(sqlite_file)
+	c = conn.cursor()
+
+	#adding record
+	#c.execute("INSERT INTO {tn} ({cn}, {cn}, {cn}, {cn}, {cn}, {cn}) VALUES (id, name, color, size, shape, quantity)".\
+	#format(tn=table_name, cn='id_column', cn='name_column', cn='color_column', cn='size_column', cn='shape_column', cn='quantity_column'))
+	
+	c.execute("INSERT INTO widgets VALUES (?, ?, ?, ?, ?, ?);", (id, name, color, size, shape, quantity))
+	#c.execute("INSERT INTO widgets VALUES ("+str(id)+", "+name+", 'orange', 'medium', 'sphere', 4)")
+	
+	
+	conn.commit()
+	conn.close()
+
+
+
+
 """
 Total rows: 1
 
@@ -18,7 +101,6 @@ id: 1
 time: 1
 """
 
-import sqlite3
 
 def connect(sqlite_file):
     """ Make connection to an SQLite database file """
@@ -75,14 +157,55 @@ def values_in_col(cursor, table_name, print_out=True):
     return col_dict
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
-    sqlite_file = 'my_first_db.sqlite'
-    table_name = 'widgets'
+    #sqlite_file = 'my_first_db.sqlite'
+    #table_name = 'widgets'
 
-    conn, c = connect(sqlite_file)
-    total_rows(c, table_name, print_out=True)
-    table_col_info(c, table_name, print_out=True)
-    values_in_col(c, table_name, print_out=True) # slow on large data bases
+    #conn, c = connect(sqlite_file)
+    #total_rows(c, table_name, print_out=True)
+    #table_col_info(c, table_name, print_out=True)
+    #values_in_col(c, table_name, print_out=True) # slow on large data bases
     
-    close(conn)
+    #close(conn)
+
+	
+	
+def show_entries():
+	conn = sqlite3.connect('my_first_db.sqlite')
+	c = conn.cursor()
+
+	c.execute("SELECT * FROM widgets")
+	print(c.fetchall())
+
+def add():
+	name=input("Enter name of widget: ")
+	color=input("Enter color of widget: ")
+	size=input("Enter size of widget: ")
+	shape=input("Enter shape of widget: ")
+	quantity=input("Enter quantity of widget: ")
+	insert(name, color, size, shape, quantity)
+	
+loop=True
+opt=0
+while(loop==True):	
+	print("Choose from the following list of commands: ")
+	print("create")
+	print("add")
+	print("show")
+	print("exit")
+	opt=input("Type a command: ")
+	if opt == "exit":
+		print("Goodbye")
+		loop=False
+	elif opt == "create":
+		create_database()
+	elif opt == "add":
+		add()
+	elif opt == "show":
+		show_entries()
+		
+	
+	
+	
+	

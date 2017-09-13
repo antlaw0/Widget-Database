@@ -18,8 +18,10 @@ class Row(object):
 		c = conn.cursor()
 
 		#adding record
-		c.execute("INSERT INTO {tn} ({cn}, {cn}, {cn}, {cn}, {cn}, {cn}) VALUES (id, name, color, size, shape, quantity)".\
-		format(tn=table_name, cn='id_column', cn='name_column', cn='color_column', cn='size_column', cn='shape_column', cn='quantity_column'))
+		#c.execute("INSERT INTO {tn} ({cn}, {cn}, {cn}, {cn}, {cn}, {cn}) VALUES (id, name, color, size, shape, quantity)".\
+		#format(tn=table_name, cn='id_column', cn='name_column', cn='color_column', cn='size_column', cn='shape_column', cn='quantity_column'))
+	
+		c.execute("INSERT INTO widgets VALUES (id,name, color, size, shape, quantity);",t)
 	
 	
 		conn.commit()
