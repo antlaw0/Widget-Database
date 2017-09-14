@@ -178,6 +178,20 @@ def show_entries():
 	c.execute("SELECT * FROM widgets")
 	print(c.fetchall())
 
+def show_query():
+	name=input("Enter name of widget to search for: ")
+	
+	conn = sqlite3.connect('my_first_db.sqlite')
+	c = conn.cursor()
+
+	#c.execute('SELECT * FROM widgets WHERE {cn}={f}'.\
+        #format(cn=column_name, f=query_value))
+	print("\n Query result: ")
+	c.execute("SELECT * FROM widgets WHERE name = ?;", (name,)) 
+	print(c.fetchall())
+	print("\n")
+	
+	
 def add():
 	name=input("Enter name of widget: ")
 	color=input("Enter color of widget: ")
@@ -262,11 +276,14 @@ while(loop==True):
 	print("show")
 	print("delete")
 	print("update")
+	print("query")
 	print("exit")
 	opt=input("Type a command: ")
 	if opt == "exit":
 		print("Goodbye")
 		loop=False
+	elif opt == "query":
+		show_query()
 	elif opt == "create":
 		create_database()
 	elif opt == "add":
