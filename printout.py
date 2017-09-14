@@ -11,7 +11,7 @@ def create_database():
 
 	# Creating a new SQLite table 
 	c.execute('CREATE TABLE {tn} ({nf} {ft})'\
-			.format(tn=table_name, nf=id_column, ft='INTEGER'))
+			.format(tn=table_name, nf=id_column, ft='INTEGER PRIMARY KEY AUTOINCREMENT'))
 
 	#add next column
 	new_column='name'
@@ -114,12 +114,12 @@ def close(conn):
     conn.close()
 
 def total_rows(cursor, table_name, print_out=False):
-    """ Returns the total number of rows in the database """
-    c.execute('SELECT COUNT(*) FROM {}'.format(table_name))
-    count = c.fetchall()
-    if print_out:
-        print('\nTotal rows: {}'.format(count[0][0]))
-    return count[0][0]
+	""" Returns the total number of rows in the database """
+	c.execute('SELECT COUNT(*) FROM {}'.format(table_name))
+	count = c.fetchall()
+	if print_out:
+		print('\nTotal rows: {}'.format(count[0][0]))
+	return count[0][0]
 
 def table_col_info(cursor, table_name, print_out=False):
     """ 
@@ -263,8 +263,6 @@ def update():
 	
 	#commit the addition
 	conn.commit()
-	
-
 	
 	
 loop=True
